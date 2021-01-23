@@ -24,8 +24,11 @@ class IndexView(SearchView):
     paginate_orphans = 0
 
     def get_queryset(self):
-        user = self.request.user
-        return Profile.objects.exclude(user=user)
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            return Profile.objects.exclude(user=user)
+        else:
+            return Profile.objects.all()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -36,7 +39,6 @@ class IndexView(SearchView):
         else:
             users = User.objects.all()
             context['users'] = users
-
         return context
 
 

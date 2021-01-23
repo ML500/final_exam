@@ -27,6 +27,7 @@ class Message(models.Model):
     whom = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='whom_messages',
                              verbose_name='Сообщение')
     text = models.TextField(max_length=1000, blank=True, null=True, verbose_name='Текст сообщения')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
 
     def __str__(self):
         return f'{self.froms} - {self.whom}'

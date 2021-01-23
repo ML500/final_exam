@@ -1,4 +1,5 @@
 from django import forms
+
 #
 # from webapp.models import File
 #
@@ -9,8 +10,17 @@ from django import forms
 #     template_name = 'widgets/xdatepicker_widget.html'
 #
 #
+from webapp.models import Message
+
+
 class SimpleSearchForm(forms.Form):
     search = forms.CharField(max_length=100, required=False, label="Найти")
+
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['text']
 #
 #
 # class FileForm(forms.ModelForm):

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Correspondence{% endblock %}
+
+{% block content %}
+    {% if is_paginated %}
+        {% include 'partial/pagination.html' %}
+    {% endif %}
+    <div class="box">
+        <ul class="nav nav-pills justify-content-center mb-2">
+            <li class="nav-item">
+                <a class="nav-link active black" data-toggle="tab" href="#inbox">Inbox</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link black" data-toggle="tab" href="#outbox">Outbox</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active in" id="inbox">
+
+                {% for i in inbox %}
+                    <p>От кого: <a href="{% url 'accounts:detail' i.froms.pk %}" >{{ i.froms }}</a></p>
+                    <p><a href="{% url 'webapp:messasge_detail' i.pk %}">Дата: {{ i.created_at|date:"d.m.Y H:i:s" }}</a></p>
+                {% endfor %}
+            </div>
+            <div class="tab-pane fade" id="outbox">
+                {% for i in outbox %}
+                    <p>Кому: <a href="{% url 'accounts:detail' i.whom.pk %}" >{{ i.whom }}</a></p>
+                    <p><a href="{% url 'webapp:messasge_detail' i.pk %}">Дата: {{ i.created_at|date:"d.m.Y H:i:s" }}</a></p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

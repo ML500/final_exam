@@ -26,6 +26,13 @@ class IndexView(SearchView):
     paginate_by = 10
     paginate_orphans = 0
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        friend_in = Friend.objects.filter(user=self.request.user).values_list('friend', flat=True)
+
+        context['friend_in'] = friend_in
+        return context
+
 
 class AddFriendView(View):
 
@@ -40,6 +47,18 @@ class AddFriendView(View):
         except:
             return JsonResponse({'add': False})
 
+
+class DeleteFriendView(View):
+    def delete(self, request, *args, **kwargs):
+        user = get_object_or_404(User, pk=kwargs.get('pk'))
+        data = json.loads(request.body)
+        friend = User.objects.get(pk=data['id'])
+        friends = get_object_or_404(Friend, user=user, friend=friend)
+        try:
+            friends.delete()
+            return JsonResponse({'remove': 'remove'})
+        except:
+            return JsonResponse({'remove': False})
 
 # class FileDetailView(DetailView):
 #     template_name = 'friend/file_detail.html'
@@ -81,4 +100,3 @@ class AddFriendView(View):
 #     template_name = 'friend/file_delete.html'
 #     model = File
 #     success_url = reverse_lazy('webapp:index')
-

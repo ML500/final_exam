@@ -1,13 +1,14 @@
 from django.urls import path, include
 
-from webapp.views.friend_views import IndexView, AddFriendView
+from webapp.views.friend_views import IndexView, AddFriendView, DeleteFriendView
 
 # FileDetailView, FileUpdateView, FileCreateView, FileDeleteView
 
 app_name = 'webapp'
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
-    path('<int:pk>/add/', AddFriendView.as_view(), name='add_friend')
+    path('<int:pk>/add/', AddFriendView.as_view(), name='add_friend'),
+    path('<int:pk>/delete/', DeleteFriendView.as_view(), name='delete_friend')
     # path('create/', FileCreateView.as_view(), name='file_create'),
     # path('<int:pk>/', FileDetailView.as_view(), name='file_detail'),
     # path('<int:pk>/update', FileUpdateView.as_view(), name='file_update'),

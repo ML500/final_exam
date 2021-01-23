@@ -49,8 +49,14 @@ async function addFriend(event) {
     console.log(id)
     let url = friend.href;
     console.log(url)
+    let remove = friend.parentElement.childNodes[2]
+    console.log(remove)
     try {
-        let response = await makeRequest(url, 'POST', {'id': id})
+        let response = await makeRequest(url, 'POST', {'id': id}).then((response) => response.json());
+        if (response['add'] === 'add'){
+             friend.style.display = 'none';
+             remove.style.display = 'inline';
+        }
         console.log(response)
     } catch (error) {
         console.log(error);
@@ -58,20 +64,21 @@ async function addFriend(event) {
 }
 
 
-async function deleteSkill(event) {
+async function deleteFriend(event) {
     event.preventDefault();
-    let skill = event.target;
-    console.log(skill)
-    let id = skill.id;
+    let friend = event.target;
+    console.log(friend)
+    let id = friend.id;
     console.log(id)
-    let url = skill.href;
+    let url = friend.href;
     console.log(url)
-    skill.style.display = 'none'
-    let add = skill.parentElement.childNodes[1]
+    friend.style.display = 'none'
+    let add = friend.parentElement.childNodes[0]
     console.log(add)
+
     try {
         let response = await makeRequest(url, 'DELETE', {'id': id}).then((response) => response.json());
-        console.log(response)
+
         if (response['remove'] === 'remove'){
             add.style.display = 'inline';
         }

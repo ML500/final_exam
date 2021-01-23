@@ -24,7 +24,8 @@
                     <img src="{% static "images/No photo.png" %}" width="auto" height="100" alt="no photo">
                 {% endif %}
                 <p><a href="{% url 'accounts:detail' user.pk %}" >{{ user.user }}</a></p>
-                <p><a id="{{ user.pk }}" onclick="addFriend(event)" href="{% url 'webapp:add_friend' request.user.pk %}">Add Friends</a></p>
+                <p><a {% if user.pk in friend_in %}style="display: none" {% endif %} id="{{ user.pk }}" onclick="addFriend(event)"  href="{% url 'webapp:add_friend' request.user.pk %}">Add Friends</a>
+                <a {% if user.pk not in friend_in %}style="display: none" {% endif %} id="{{ user.pk }}" onclick="deleteFriend(event)" href="{% url 'webapp:delete_friend' request.user.pk %}">Delete Friends</a></p>
             </div>
         {% endif %}
     {% endfor %}
@@ -53,5 +54,5 @@
 
 {% endblock %}
 {% block scripts %}
-    <script type="application/javascript" src="{% static "js/add_friend.js" %}"></script>
+
 {% endblock %}

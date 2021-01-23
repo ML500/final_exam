@@ -81,7 +81,9 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        friend_in = Friend.objects.filter(user=self.request.user).values_list('friend', flat=True)
         context['friends'] = Friend.objects.filter(user=self.request.user)
+        context['friend_in'] = friend_in
         return context
     #
     #     files = File.objects.filter(author_id=self.object.pk)

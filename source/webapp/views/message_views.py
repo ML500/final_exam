@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, TemplateView, DetailView
-
+from django.http import Http404
 from accounts.admin import User
 from webapp.forms import MessageForm
 from webapp.models import Message
@@ -19,6 +19,8 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
         message = form.save(commit=False)
         message.froms = self.request.user
         message.whom = user
+        if message.whom == self.request.user:
+            return Http404('Нельзя отправить самому себе')
         message.save()
         return redirect('webapp:message_correspondance')
 

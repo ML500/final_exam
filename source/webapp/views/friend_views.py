@@ -1,15 +1,12 @@
 import json
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.timezone import make_naive
 from django.views import View
 from django.views.generic import DetailView, UpdateView, CreateView, DeleteView
-
-# from webapp.forms import FileForm
-# from webapp.models import File
 
 from accounts.admin import User
 from accounts.models import Profile
@@ -23,8 +20,12 @@ class IndexView(SearchView):
     template_name = 'friend/index.html'
     model = Profile
     context_object_name = 'users'
-    paginate_by = 10
+    paginate_by = 2
     paginate_orphans = 0
+
+    def get_queryset(self):
+        user = self.request.user
+        return Profile.objects.exclude(user=user)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,7 +40,7 @@ class IndexView(SearchView):
         return context
 
 
-class AddFriendView(View):
+class AddFriendView(LoginRequiredMixin,View):
 
     def post(self, request, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs.get('pk'))
@@ -53,7 +54,7 @@ class AddFriendView(View):
             return JsonResponse({'add': False})
 
 
-class DeleteFriendView(View):
+class DeleteFriendView(LoginRequiredMixin,View):
     def delete(self, request, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs.get('pk'))
         data = json.loads(request.body)
@@ -64,44 +65,3 @@ class DeleteFriendView(View):
             return JsonResponse({'remove': 'remove'})
         except:
             return JsonResponse({'remove': False})
-
-# class FileDetailView(DetailView):
-#     template_name = 'friend/file_detail.html'
-#     model = File
-#     context_object_name = 'file'
-
-
-# class FileUpdateView(PermissionRequiredMixin, UpdateView):
-#     template_name = 'friend/file_update.html'
-#     form_class = FileForm
-#     model = File
-#     permission_required = 'webapp.change_file'
-#
-#     def has_permission(self):
-#         file = self.get_object()
-#         return super().has_permission() or file.author == self.request.user
-#
-#     def form_valid(self, form):
-#         file = form.save()
-#         return redirect('webapp:file_detail', pk=file.pk)
-#
-# class FileCreateView(CreateView):
-#     template_name = 'friend/file_create.html'
-#     form_class = FileForm
-#     model = File
-#
-#     def form_valid(self, form):
-#         file = form.save(commit=False)
-#         file.author = self.request.user
-#         file.save()
-#         form.save_m2m()
-#         return super().form_valid(form)
-#
-#     def get_success_url(self):
-#         return reverse('webapp:file_detail', kwargs={'pk': self.object.pk})
-#
-#
-# class FileDeleteView(DeleteView):
-#     template_name = 'friend/file_delete.html'
-#     model = File
-#     success_url = reverse_lazy('webapp:index')

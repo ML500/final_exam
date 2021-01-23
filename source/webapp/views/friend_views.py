@@ -32,6 +32,9 @@ class IndexView(SearchView):
             friend_in = Friend.objects.filter(user=self.request.user).values_list('friend', flat=True)
 
             context['friend_in'] = friend_in
+        else:
+            users = User.objects.all()
+            context['users'] = users
 
         return context
 

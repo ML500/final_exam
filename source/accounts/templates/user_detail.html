@@ -26,7 +26,9 @@
     <h2 class="text-center clear">Друзья пользователя:</h2>
     {% for friend in friends %}
         <p><a href="{% url 'accounts:detail' friend.friend.pk %}" >{{ friend.friend }}</a></p>
-        <p><a {% if friend.friend.pk in friend_in %}style="display: none" {% endif %} id="{{ friend.friend.pk }}" onclick="addFriend(event)"  href="{% url 'webapp:add_friend' request.user.pk %}">Add Friends</a>
-        <a {% if friend.friend.pk not in friend_in %}style="display: none" {% endif %} id="{{ friend.friend.pk }}" onclick="deleteFriend(event)" href="{% url 'webapp:delete_friend' request.user.pk %}">Delete Friends</a></p>
+        {% if request.user.is_authenticated %}
+            <p><a {% if friend.friend.pk in friend_in %}style="display: none" {% endif %} id="{{ friend.friend.pk }}" onclick="addFriend(event)"  href="{% url 'webapp:add_friend' request.user.pk %}">Add Friends</a>
+            <a {% if friend.friend.pk not in friend_in %}style="display: none" {% endif %} id="{{ friend.friend.pk }}" onclick="deleteFriend(event)" href="{% url 'webapp:delete_friend' request.user.pk %}">Delete Friends</a></p>
+        {% endif %}
     {% endfor %}
 {% endblock %}

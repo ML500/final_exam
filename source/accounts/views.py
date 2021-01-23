@@ -72,7 +72,7 @@ class RegisterActivateView(View):
         login(self.request, user)
 
 
-class UserDetailView(LoginRequiredMixin, DetailView):
+class UserDetailView(DetailView):
     model = get_user_model()
     template_name = 'user_detail.html'
     context_object_name = 'user_obj'
@@ -81,9 +81,12 @@ class UserDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        friend_in = Friend.objects.filter(user=self.request.user).values_list('friend', flat=True)
-        context['friends'] = Friend.objects.filter(user=self.request.user)
-        context['friend_in'] = friend_in
+        if self.request.user.is_authenticated:
+            friend_in = Friend.objects.filter(user=self.request.user).values_list('friend', flat=True)
+            context['friends'] = Friend.objects.filter(user=self.request.user)
+            context['friend_in'] = friend_in
+        else:
+            context['friends'] = Friend.objects.filter(user=self.object.pk)
         return context
     #
     #     files = File.objects.filter(author_id=self.object.pk)

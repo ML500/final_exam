@@ -79,10 +79,10 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     paginate_related_by = 5
     paginate_related_orphans = 0
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['friends'] = Friend.objects.filter(user=self.request.user)
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['friends'] = Friend.objects.filter(user=self.request.user)
+        return context
     #
     #     files = File.objects.filter(author_id=self.object.pk)
     #     context['files'] = files

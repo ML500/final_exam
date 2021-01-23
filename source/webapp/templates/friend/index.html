@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Hello{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">Users</h1>
+
+    {% if is_paginated %}
+        {% include 'partial/pagination.html' %}
+    {% endif %}
+
+    {% for user in users %}
+        {% if user.user != request.user  %}
+            <div class="box">
+                {% if user.user.first_name or user.user.last_name %}
+                    <p>Name: {{ user.user.first_name }}</p>
+                    <p>Last name: {{ user.user.last_name }}</p>
+                {% else %}
+                    <p>{{ user.user }}</p>
+                {% endif %}
+                {% if user.avatar %}
+                    <img src="{{ user.avatar.url }}" width="auto" height="100" alt="user_pic">
+                {% else %}
+                    <img src="{% static "images/No photo.png" %}" width="auto" height="100" alt="no photo">
+                {% endif %}
+                <p><a href="{% url 'accounts:detail' user.pk %}" >{{ user.user }}</a></p>
+                <p><a id="{{ user.pk }}" onclick="addFriend(event)" href="{% url 'webapp:add_friend' request.user.pk %}">Add Friends</a></p>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+
+{#    <a class="mx-5" {% if i.pk in goal_in_session %}style="display: none" {% endif %}#}
+{#                               onclick="addSkill(event)" id="{{ i.pk }}"#}
+{#                               href="{% url 'webapp:add_skill' sessions.pk %}">ADD</a>#}
+{#                            <a class="mx-5" {% if i.pk not in goal_in_session %} style="display: none" {% endif %}#}
+{#                                                                    onclick="deleteSkill (event)" id="{{ i.pk }}"#}
+{#                                                                    href="{% url 'webapp:delete_skill' sessions.pk %}">REMOVE</a>#}
+{#    {% for file in files %}#}
+{#        <div class="box">#}
+{#            <a href="{% url 'webapp:file_detail' file.pk %}">{{ file.name }}</a>#}
+{#            <p>{{ file.author }}</p>#}
+{#            <p>{{ file.created_at|date:"d.m.Y H:i:s" }}</p>#}
+{#            <div style="word-wrap: break-word;">#}
+{#                <a href="{{ file.file.url }}" download>{{ file.name }}</a>#}
+{#            </div>#}
+{#                <img src="{{ file.file.url }}" width="auto" height="100" alt="file picture">#}
+{#        </div>#}
+{#    {% endfor %}#}
+    {% if is_paginated %}
+        {% include 'partial/pagination.html' %}
+    {% endif %}
+
+{% endblock %}
+{% block scripts %}
+    <script type="application/javascript" src="{% static "js/add_friend.js" %}"></script>
+{% endblock %}

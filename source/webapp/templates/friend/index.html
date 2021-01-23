@@ -3,32 +3,37 @@
 {% block title %}Hello{% endblock %}
 
 {% block content %}
+{% if request.user.is_authenticated %}
     <h1 class="text-center">Users</h1>
 
     {% if is_paginated %}
         {% include 'partial/pagination.html' %}
     {% endif %}
 
-    {% for user in users %}
-        {% if user.user != request.user  %}
-            <div class="box">
-                {% if user.user.first_name or user.user.last_name %}
-                    <p>Name: {{ user.user.first_name }}</p>
-                    <p>Last name: {{ user.user.last_name }}</p>
-                {% else %}
-                    <p>{{ user.user }}</p>
-                {% endif %}
-                {% if user.avatar %}
-                    <img src="{{ user.avatar.url }}" width="auto" height="100" alt="user_pic">
-                {% else %}
-                    <img src="{% static "images/No photo.png" %}" width="auto" height="100" alt="no photo">
-                {% endif %}
-                <p><a href="{% url 'accounts:detail' user.pk %}" >{{ user.user }}</a></p>
-                <p><a {% if user.pk in friend_in %}style="display: none" {% endif %} id="{{ user.pk }}" onclick="addFriend(event)"  href="{% url 'webapp:add_friend' request.user.pk %}">Add Friends</a>
-                <a {% if user.pk not in friend_in %}style="display: none" {% endif %} id="{{ user.pk }}" onclick="deleteFriend(event)" href="{% url 'webapp:delete_friend' request.user.pk %}">Delete Friends</a></p>
-            </div>
-        {% endif %}
-    {% endfor %}
+        {% for user in users %}
+            {% if user.user != request.user  %}
+                <div class="box">
+                    {% if user.user.first_name or user.user.last_name %}
+                        <p>Name: {{ user.user.first_name }}</p>
+                        <p>Last name: {{ user.user.last_name }}</p>
+                    {% else %}
+                        <p>{{ user.user }}</p>
+                    {% endif %}
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" width="auto" height="100" alt="user_pic">
+                    {% else %}
+                        <img src="{% static "images/No photo.png" %}" width="auto" height="100" alt="no photo">
+                    {% endif %}
+                    <p><a href="{% url 'accounts:detail' user.pk %}" >{{ user.user }}</a></p>
+                    <p><a {% if user.pk in friend_in %}style="display: none" {% endif %} id="{{ user.pk }}" onclick="addFriend(event)"  href="{% url 'webapp:add_friend' request.user.pk %}">Add Friends</a>
+                    <a {% if user.pk not in friend_in %}style="display: none" {% endif %} id="{{ user.pk }}" onclick="deleteFriend(event)" href="{% url 'webapp:delete_friend' request.user.pk %}">Delete Friends</a></p>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% if is_paginated %}
+        {% include 'partial/pagination.html' %}
+    {% endif %}
+    {% endif %}
 
 
 {#    <a class="mx-5" {% if i.pk in goal_in_session %}style="display: none" {% endif %}#}
@@ -48,9 +53,7 @@
 {#                <img src="{{ file.file.url }}" width="auto" height="100" alt="file picture">#}
 {#        </div>#}
 {#    {% endfor %}#}
-    {% if is_paginated %}
-        {% include 'partial/pagination.html' %}
-    {% endif %}
+
 
 {% endblock %}
 {% block scripts %}

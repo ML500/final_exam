@@ -28,9 +28,11 @@ class IndexView(SearchView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        friend_in = Friend.objects.filter(user=self.request.user).values_list('friend', flat=True)
+        if self.request.user.is_authenticated:
+            friend_in = Friend.objects.filter(user=self.request.user).values_list('friend', flat=True)
 
-        context['friend_in'] = friend_in
+            context['friend_in'] = friend_in
+
         return context
 
 

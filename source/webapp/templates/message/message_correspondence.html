@@ -16,20 +16,61 @@
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane active in" id="inbox">
 
-                {% for i in inbox %}
-                    <p>От кого: <a href="{% url 'accounts:detail' i.froms.pk %}" >{{ i.froms }}</a></p>
-                    <p><a href="{% url 'webapp:messasge_detail' i.pk %}">Дата: {{ i.created_at|date:"d.m.Y H:i:s" }}</a></p>
+
+            <div class="tab-pane active in" id="inbox">
+                <div id="accordion">
+                    {% for i in inbox %}
+                      <div class="card">
+                          <p class="text-center">Кому: <a href="{% url 'accounts:detail' i.froms.pk %}">{{ i.froms }}</a></p>
+                          <p class="text-center">Дата: {{ i.created_at|date:"d.m.Y H:i:s" }}</p>
+                            <div class="card-header" id="{{ i.pk }}">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#_{{ i.pk }}_pk" aria-expanded="false" aria-controls=#_{{ i.pk }}_pk"">
+                                      <p class="text-center">тыкай!</p>
+                                    </button>
+                                </h5>
+                            </div>
+
+                            <div id="_{{ i.pk }}_pk" class="collapse" aria-labelledby="{{ i.pk }}" data-parent="#accordion">
+                              <div class="card-body">
+                                <p>{{ i.text }}</p>
+                              </div>
+                            </div>
+                      </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="outbox">
+
+            <div id="accordion">
+                {% for i in outbox %}
+                    <div class="card">
+                        <p class="text-center">Кому: <a href="{% url 'accounts:detail' i.whom.pk %}">{{ i.whom }}</a></p>
+                        <p class="text-center">Дата: {{ i.created_at|date:"d.m.Y H:i:s" }}</p>
+                        <div class="card-header" id="{{ i.pk }}">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#_{{ i.pk }}_pk" aria-expanded="false" aria-controls=#_{{ i.pk }}_pk"">
+                                  <p class="text-center">тыкай!</p>
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="_{{ i.pk }}_pk" class="collapse" aria-labelledby="{{ i.pk }}" data-parent="#accordion">
+                            <div class="card-body">
+                                <p>{{ i.text }}</p>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
             </div>
-            <div class="tab-pane fade" id="outbox">
-                {% for i in outbox %}
-                    <p>Кому: <a href="{% url 'accounts:detail' i.whom.pk %}" >{{ i.whom }}</a></p>
-                    <p><a href="{% url 'webapp:messasge_detail' i.pk %}">Дата: {{ i.created_at|date:"d.m.Y H:i:s" }}</a></p>
-                {% endfor %}
+
+
             </div>
         </div>
     </div>
+
+
 
 {% endblock %}

@@ -7,6 +7,7 @@
     {% if request.user == user_obj %}
         <li><a href="{% url 'accounts:change' user_obj.pk %}">Редактировать</a></li>
         <li><a href="{% url 'accounts:password_change' user_obj.pk %}">Смена пароля</a></li>
+        <li><a href="{% url 'webapp:message_correspondance' %}">Список сообщений</a></li>
     {% endif %}
 {% endblock %}
 
@@ -29,6 +30,7 @@
         {% if request.user.is_authenticated %}
             <p><a {% if friend.friend.pk in friend_in %}style="display: none" {% endif %} id="{{ friend.friend.pk }}" onclick="addFriend(event)"  href="{% url 'webapp:add_friend' request.user.pk %}">Add Friends</a>
             <a {% if friend.friend.pk not in friend_in %}style="display: none" {% endif %} id="{{ friend.friend.pk }}" onclick="deleteFriend(event)" href="{% url 'webapp:delete_friend' request.user.pk %}">Delete Friends</a></p>
+            <p><a href="{% url 'webapp:message_create' friend.friend.pk %}">Write a message</a></p>
         {% endif %}
     {% endfor %}
 {% endblock %}

@@ -33,7 +33,9 @@
             {% else %}
                 <li><a href="{% url 'accounts:login' %}?next={{ request.get_full_path }}">Login</a></li>
                 <li><a href="{% url 'accounts:create' %}?next={{ request.get_full_path }}">Sign Up</a></li>
-                <li><a href="{% url 'accounts:password_reset_email' %}">Reset password</a></li>
+                {% if request.user.is_authenticated %}
+                    <li><a href="{% url 'accounts:password_reset_email' %}">Reset password</a></li>
+                {% endif %}
             {% endif %}
         </ul>
         {% block search %}
